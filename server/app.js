@@ -4,7 +4,8 @@ const cors = require("cors");
 
 const router = require("./api/router/router");
 const blockchainRouter = require("./dev/router");
-
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'public')));
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,6 +24,10 @@ function responseTimeLogger(req, res, next) {
 
 app.use(cors({ origin: process.env.CORS_ORIGIN }));
 app.use(responseTimeLogger);
+
+app.get('*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 app.use("/", router, blockchainRouter);
 
 app.listen(port, () => {
